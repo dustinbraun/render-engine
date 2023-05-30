@@ -15,6 +15,7 @@ layout(location = 2) uniform mat4 u_light_view_projection;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
+
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
@@ -24,8 +25,20 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
-    float bias = 0.0005;
+    float bias = 0.002;
     float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+
+    // float shadow = 0.0;
+    // vec2 texelSize = 1.0 / vec2(512.0, 512.0);
+    // for(int x = -1; x <= 1; ++x)
+    // {
+    //     for(int y = -1; y <= 1; ++y)
+    //     {
+    //         float pcfDepth = texture(u_shadow_depth, projCoords.xy + vec2(x, y) * texelSize).r; 
+    //         shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
+    //     }    
+    // }
+    // shadow /= 9.0;
 
     return shadow;
 }  
@@ -38,6 +51,8 @@ void main() {
 
     vec3 frag_color = (1.0 - shadow)*texture(u_color, i_frag_texcoord).rgb*max(dot(texture(u_normal, i_frag_texcoord).rgb, -u_light_direction), 0.0)*u_light_color;
     
+    //vec3 frag_color = shadow*vec3(1.0, 1.0, 1.0);
+
     o_frag_color = vec4(frag_color, 1.0);
 
 

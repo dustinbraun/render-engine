@@ -11,11 +11,17 @@ class DirectionalLightNode;
 class MeshNode;
 class Node;
 
+class SceneConfig {
+public:
+    Extent2D m_screen_extent;
+    Extent2D m_shadow_map_extent;
+};
+
 class Scene {
 public:
-    Scene() : m_g_buffer(800, 600) {
+    Scene(const SceneConfig& config) : m_config(config), m_g_buffer(config.m_screen_extent.m_w, config.m_screen_extent.m_h) {
         m_quad.init();
-        m_shadow_depth_map.init();
+        m_shadow_depth_map.init(config.m_shadow_map_extent);
         m_ambient_light_program.init(
             "../shader/ambient_light_vs.glsl",
             "../shader/ambient_light_fs.glsl"
@@ -47,6 +53,8 @@ public:
     void enqueue_directional_light(const DirectionalLightNode& node);
 
 private:
+    SceneConfig m_config;
+
     GBuffer m_g_buffer;
 
     ShadowDepthMap m_shadow_depth_map;

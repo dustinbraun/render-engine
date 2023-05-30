@@ -8,10 +8,10 @@ in vec2 var_tex_coords;
 in vec3 var_vertex_normals;
 in vec3 var_frag_pos;
 
-//layout(binding=0) uniform sampler2D diffuse_texture;
+layout(binding=0) uniform sampler2D diffuse_texture;
 
 void main() {
     out_normal = normalize(var_vertex_normals);
     out_position = var_frag_pos;
-    out_diffuse = vec3(1.0, 0.0, 0.0); //texture(diffuse_texture, var_tex_coords).rgb;
+    out_diffuse = texture(diffuse_texture, var_tex_coords).rgb;
 }

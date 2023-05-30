@@ -10,11 +10,11 @@ public:
         const glm::vec3& direction,
         const glm::vec3& color
     ) : m_direction(direction), m_color(color) {
-        float near_plane = 1.0f;
+        float near_plane = 0.1f;
         float far_plane = 20.0f;
-        glm::mat4 projection = glm::ortho(-3.0f, 3.0f, -3.0f, 3.0f, near_plane, far_plane);
+        glm::mat4 projection = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, near_plane, far_plane);
         glm::mat4 view = glm::lookAt(
-            (-m_direction)*10.0f,
+            (-m_direction)*5.0f,
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 1.0f, 0.0f)
         );

@@ -20,6 +20,7 @@ void Scene::render(const Camera& camera) {
     glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(camera.m_view));
     for (auto mesh : m_mesh_queue) {
         glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(mesh->m_transform));
+        mesh->m_texture->bind(0);
         mesh->m_mesh->render();
     }
     m_mesh_queue.clear();
@@ -41,7 +42,7 @@ void Scene::render(const Camera& camera) {
     for (auto node : m_directional_light_queue) {
         // -----------------------------------------------
         // DEPTH SHADOW PASS
-        glViewport(0, 0, 1024, 1024);
+        glViewport(0, 0, m_config.m_shadow_map_extent.m_w, m_config.m_shadow_map_extent.m_h);
         m_shadow_depth_map.bind_framebuffer();
         glClear(GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
@@ -60,7 +61,8 @@ void Scene::render(const Camera& camera) {
         m_mesh_queue.clear();
 
         glDisable(GL_DEPTH_TEST);
-        glViewport(0, 0, 800, 600);
+        glViewport(0, 0, m_config.m_screen_extent.m_w, m_config.m_screen_extent.m_h);
+        //glViewport(0, 0, 800, 600);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
